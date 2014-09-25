@@ -6,14 +6,14 @@
 @module csv-to-json
 @package csv-to-json
 @subpackage main
-@version 0.0.1
+@version 0.0.2
 @author hex7c0 <hex7c0@gmail.com>
 @copyright hex7c0 2014
 @license GPLv3
 '''
 
 NAME = 'csv-to-json'
-VERSION = '0.0.1'
+VERSION = '0.0.2'
 
 try:
     # check version
@@ -31,7 +31,7 @@ try:
 except ImportError as error:
     print('in %s cannot load required libraries: %s!' \
         % (__name__, error))
-    quit()
+    quit(1)
 
 def ctj(args):
     '''
@@ -41,40 +41,64 @@ def ctj(args):
     @return: bool
     '''
 
+    def populate(left, right, what=-1):
+        '''
+        popolate dictionary
+
+        @param int left - first index
+        @param int right - second index
+        @param float what - element
+        '''
+
+        try:
+            out[left][right] = what
+        except KeyError:
+            out[left] = {right: what}
+        return
+
     body = False
     out = dict()
     if(args.w[0]):
-        body = dict()
-        body[args.w[0]] = out
+        body = {args.w[0]: out}
 
     try:
+
+        # read
         with open(args.Csv[0]) as file:
             readed = reader(file, delimiter=args.d[0], quotechar=args.q[0])
 
-            # upper init
             columns = next(readed)
-            for row in range(1, len(columns)):
-                out[int(columns[row])] = dict()
-
             for row in readed:
                 index = int(row[0])
-
                 for element in range(1, len(row)):
                     point = row[element]
                     if(point == '0'):
-                        out[int(columns[element])][index] = -1
+                        populate(int(columns[element]), index)
                     else:
                         try:
                             floated = float(point.replace(',', '.'))
-                            out[int(columns[element])][index] = floated
+                            populate(int(columns[element]), index, floated)
                         except ValueError:
                             pass
 
-        out[int(columns[-1]) + 100] = -1
+        # delimiter
+        for height in out:
+            point = out[height]
+            clean = False
+            for width in sorted(point):
+                if(clean):  # remove next
+                    del point[width]
+                elif(point[width] == -1):
+                    clean = True
+            if(len(point) == 1):
+                out[height] = -1
+
+        # write
         with open(args.j[0], 'w') as file:
             dump(body or out, file, indent=args.i[0], sort_keys=args.s)
             file.write('\n')
         return True
+
     except KeyboardInterrupt:
         return False
 
@@ -92,13 +116,12 @@ if __name__ == '__main__':
         if(not exists(roo)):
             if(out):
                 raise ArgumentTypeError('"%s" not found' % root)
-            return False
-        elif(not isfile(roo)):
+            roo = False
+        if(not isfile(roo)):
             if(out):
                 raise ArgumentTypeError('"%s" not a file' % root)
-            return False
-        else:
-            return roo
+            roo = False
+        return roo
 
     def crono(start, pprint=True):  # Crono old
         '''
@@ -116,11 +139,11 @@ if __name__ == '__main__':
             if (end < 60):  # sec
                 return '%s sec and %s ms' % (strftime('%S', \
                                                  gmtime(end)), microsecond)
-            elif (end < 3600):  # min
+            if (end < 3600):  # min
                 return '%s min and %s ms' % (strftime('%M,%S', \
                                                  gmtime(end)), microsecond)
-            else:  # hr
-                return '%s hr and %s ms' % (strftime('%H.%M,%S', \
+            # hr
+            return '%s hr and %s ms' % (strftime('%H.%M,%S', \
                                                  gmtime(end)), microsecond)
         else:
             return int(strftime('%S', gmtime(start)))
@@ -157,3 +180,4 @@ if __name__ == '__main__':
             print('json generated in %s' % crono(START))
     else:
         print('something wrong')
+    quit(0)
