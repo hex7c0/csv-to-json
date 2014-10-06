@@ -1,19 +1,18 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-
 '''
 @file csv-to-json main
 @module csv-to-json
 @package csv-to-json
 @subpackage main
-@version 0.0.2
+@version 0.0.3
 @author hex7c0 <hex7c0@gmail.com>
 @copyright hex7c0 2014
 @license GPLv3
 '''
 
 NAME = 'csv-to-json'
-VERSION = '0.0.2'
+VERSION = '0.0.3'
 
 try:
     # check version
@@ -64,22 +63,22 @@ def ctj(args):
     try:
 
         # read
-        with open(args.Csv[0]) as file:
+        with open(args.csv[0]) as file:
             readed = reader(file, delimiter=args.d[0], quotechar=args.q[0])
 
-            columns = next(readed)
-            for row in readed:
-                index = int(row[0])
-                for element in range(1, len(row)):
-                    point = row[element]
-                    if(point == '0'):
-                        populate(int(columns[element]), index)
-                    else:
-                        try:
-                            floated = float(point.replace(',', '.'))
-                            populate(int(columns[element]), index, floated)
-                        except ValueError:
-                            pass
+        columns = next(readed)
+        for row in readed:
+            index = int(row[0])
+            for element in range(1, len(row)):
+                point = row[element]
+                if(point == '0'):
+                    populate(int(columns[element]), index)
+                else:
+                    try:
+                        floated = float(point.replace(',', '.'))
+                        populate(int(columns[element]), index, floated)
+                    except ValueError:
+                        pass
 
         # delimiter
         for height in out:
@@ -108,8 +107,8 @@ if __name__ == '__main__':
         '''
         type for argparse
 
-        @param string root - path of file
-        @return string|bool
+        @param str root - path of file
+        @return str|bool
         '''
 
         roo = root if isabs(root) else abspath(root)
@@ -123,14 +122,14 @@ if __name__ == '__main__':
             roo = False
         return roo
 
-    def crono(start, pprint=True):  # Crono old
+    def crono(start, pprint=True):
         '''
         given the initial unix time
         return time spent
 
         @param time start - stating time
         @param bool pprint - if print to output
-        @return: string
+        @return: str
         '''
 
         if(pprint):
@@ -152,7 +151,7 @@ if __name__ == '__main__':
 
     PARSER.add_argument('-v', '--version', action='version', \
                         version='%s version %s' % (NAME, VERSION))
-    PARSER.add_argument('Csv', type=check, nargs=1, help='path of csv file')
+    PARSER.add_argument('csv', type=check, nargs=1, help='path of csv file')
 
     GROUP_1 = PARSER.add_argument_group(title='csv parameters')
     GROUP_1.add_argument('-d', metavar='chars', nargs=1, type=str, \
