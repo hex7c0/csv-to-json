@@ -14,13 +14,15 @@ python3 ctj.py file.csv
 
 #### options
 
- - `Csv` - **String** Csv path *(default "required")*
+ - `csv` - **String** Csv path *(default "required")*
  - `-d`- **String** Delimiter for csv *(default ";")*
  - `-q` - **String** Quotechar for csv *(default """)*
  - `-j` - **String** Path of json file *(default "ctj.json")*
  - `-w`- **String** Wrapper for csv *(default "False")*
  - `-i` - **Integer** Indent for csv *(default "4")*
  - `-s` - **Boolean** Sort keys for json *(default "True")*
+ - `-h`, `--help` - Show this help message and exit
+ - `-v`, `--version` - Show program's version number and exit
 
 ## Examples
 
