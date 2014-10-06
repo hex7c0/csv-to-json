@@ -17,6 +17,7 @@ python3 ctj.py file.csv
  - `csv` - **String** Csv path *(default "required")*
  - `-d`- **String** Delimiter for csv *(default ";")*
  - `-q` - **String** Quotechar for csv *(default """)*
+ - `-s` - **Boolean** Sort csv with "row x column" *(default "column x row")*
  - `-j` - **String** Path of json file *(default "ctj.json")*
  - `-w`- **String** Wrapper for csv *(default "False")*
  - `-i` - **Integer** Indent for csv *(default "4")*
