@@ -5,14 +5,14 @@
 @module csv-to-json
 @package csv-to-json
 @subpackage main
-@version 0.0.3
+@version 0.0.4
 @author hex7c0 <hex7c0@gmail.com>
 @copyright hex7c0 2014
 @license GPLv3
 '''
 
 NAME = 'csv-to-json'
-VERSION = '0.0.3'
+VERSION = '0.0.4'
 
 try:
     # check version
@@ -65,20 +65,34 @@ def ctj(args):
         # read
         with open(args.csv[0]) as file:
             readed = reader(file, delimiter=args.d[0], quotechar=args.q[0])
+            columns = next(readed)
 
-        columns = next(readed)
-        for row in readed:
-            index = int(row[0])
-            for element in range(1, len(row)):
-                point = row[element]
-                if(point == '0'):
-                    populate(int(columns[element]), index)
-                else:
-                    try:
-                        floated = float(point.replace(',', '.'))
-                        populate(int(columns[element]), index, floated)
-                    except ValueError:
-                        pass
+            if(args.c):  # row x column
+                for row in readed:
+                    index = int(row[0])
+                    for element in range(1, len(row)):
+                        point = row[element]
+                        if(point == '0'):
+                            populate(index, int(columns[element]))
+                        else:
+                            try:
+                                floated = float(point.replace(',', '.'))
+                                populate(index, int(columns[element]), floated)
+                            except ValueError:
+                                pass
+            else:  # column x row
+                for row in readed:
+                    index = int(row[0])
+                    for element in range(1, len(row)):
+                        point = row[element]
+                        if(point == '0'):
+                            populate(int(columns[element]), index)
+                        else:
+                            try:
+                                floated = float(point.replace(',', '.'))
+                                populate(int(columns[element]), index, floated)
+                            except ValueError:
+                                pass
 
         # delimiter
         for height in out:
@@ -158,6 +172,8 @@ if __name__ == '__main__':
                          help='delimiter for csv', default=[';'])
     GROUP_1.add_argument('-q', metavar='chars', nargs=1, type=str, \
                          help='quotechar for csv', default=['"'])
+    GROUP_1.add_argument('-c', action='store_true', \
+                         help='row x column')
 
     GROUP_2 = PARSER.add_argument_group(title='json parameters')
     GROUP_2.add_argument('-j', metavar='path', nargs=1, type=str, \
