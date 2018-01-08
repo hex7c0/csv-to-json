@@ -1,5 +1,7 @@
 # csv-to-json
 
+[![Build Status](https://travis-ci.org/hex7c0/csv-to-json.svg?branch=master)](https://travis-ci.org/hex7c0/csv-to-json)
+
 Build json file, from csv file matrix
 
 ## API
@@ -27,6 +29,6 @@ python3 ctj.py file.csv
 
 ## Examples
 
-Take a look at my [examples](https://github.com/hex7c0/csv-to-json/tree/master/examples)
+Take a look at my [examples](examples)
 
-### [License GPLv3](http://opensource.org/licenses/GPL-3.0)
+### [License GPLv3](LICENSE)
